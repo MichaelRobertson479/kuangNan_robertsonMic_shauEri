@@ -84,9 +84,9 @@ int main(int argc, char *argv[]) {
     print_hand(deck);
     printf("%d\n", deck->size);
     int i;
-    // for (i = 0; i < 108; i++){
-    //   free(deck->card_hand[i]);
-    // }
+    for (i = 0; i < 108; i++){
+      free(deck->card_hand[i]);
+    }
     free(deck);
     return 0;
 }
