@@ -23,13 +23,14 @@ Your hand: Red One, Yellow Four, Green Eight, Blue Nine
 *It refreshes each turn
 ```
 
-# Topics Covered in Class:
+# Topics Covered in Class (edited):
 
 - Shared Memory
-  - Used to show the top card of the pile
+  - Players will SSH into a single device (so no actual networking)
+  - Used to show the top card of the pile, keep track of turns, and do pseudo-networking
 
-- Networking
-  - Used to connect computers of the different players
+- Semaphore
+  - Used to control access to the file representing the pile of cards
 
 - Working with Files
   - Write to a file, representing the pile of played cards, from STDIN
@@ -50,7 +51,7 @@ Your hand: Red One, Yellow Four, Green Eight, Blue Nine
 
 - A simple sorting algorithm for organizing cards in the hand first by number/type, then by color
 
-# Timeline:
+# Timeline (still needs to be changed):
 
 Fri 1/3: Making the Makefile and the header file (All)
 - Figuring out which c and header files are needed.
