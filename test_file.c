@@ -10,10 +10,11 @@
 #include <string.h>
 #include <fcntl.h>
 #include <time.h>
+#include <sys/wait.h>
 
-#define NUMBER_OF_PLAYERS_KEY 69420
-#define WAITING_PLAYERS_ARRAY_KEY 420
-#define TURN_COUNTER_KEY 42069
+#define NUMBER_OF_PLAYERS_KEY 69422
+#define WAITING_PLAYERS_ARRAY_KEY 422
+#define TURN_COUNTER_KEY 42072
 
 int main(){
 
@@ -22,37 +23,37 @@ int main(){
   int tc_key;
   int player_number;
   int * nop;
-  int wpa[420];
+  int * wpa[420];
   int * turn_counter;
   char * buffer;
 
   nop_key = shmget(NUMBER_OF_PLAYERS_KEY, sizeof(int), IPC_CREAT | IPC_EXCL | 0644);
   if (nop_key == -1){
-     nop_key = shmget(NUMBER_OF_PLAYERS_KEY, sizeof(int), 0);
+     nop_key = shmget(NUMBER_OF_PLAYERS_KEY, sizeof(int), 0644);
      if (nop_key == -1){
        printf("error nop_key %d: %s\n", errno, strerror(errno));
        exit(1);
      }
      nop = shmat(nop_key, 0, 0);
-     if (nop == -1){
+     if (nop == NULL){
        printf("error nop_shmat %d: %s\n", errno, strerror(errno));
        exit(1);
      }
      *nop++;
      player_number = *nop;
-     int fork = fork();
-     if (fork == 0){
-       wpa_key = shmget(WAITING_PLAYERS_ARRAY_KEY, sizeof(wpa), 0);
+     int spoon = fork();
+     if (spoon == 0){
+       wpa_key = shmget(WAITING_PLAYERS_ARRAY_KEY, sizeof(wpa), 0644);
        if (wpa_key == -1){
          printf("error wpa_key %d: %s\n", errno, strerror(errno));
          exit(1);
        }
-       wpa = shmat(wpa_key, 0, 0);
-       if (wpa == -1){
+       *wpa = shmat(wpa_key, 0, 0);
+       if (wpa == NULL){
          printf("error wpa_shmat %d: %s\n", errno, strerror(errno));
          exit(1);
        }
-       wpa[*nop] = getpid();
+       *wpa[*nop] = getpid();
        while(1){
          printf("Welcome to the card game Tres!\n");
          printf("Waiting for first player to start the game!\n");
@@ -63,6 +64,10 @@ int main(){
   }
   else{
     nop = shmat(nop_key, 0, 0);
+    if (nop == NULL){
+      printf("error nop_shmat %d: %s\n", errno, strerror(errno));
+      exit(1);
+    }
     *nop = 1;
     player_number = 1;
     wpa_key = shmget(WAITING_PLAYERS_ARRAY_KEY, sizeof(int), IPC_CREAT | IPC_EXCL | 0644);
@@ -79,8 +84,8 @@ int main(){
     }
     int i;
     for (i = 1; i < *nop; i++){
-      kill(wpa[i], SIGKILL);
-      wpa[i] = 0;
+      kill(*wpa[i], SIGKILL);
+      *wpa[i] = 0;
     }
     tc_key = shmget(TURN_COUNTER_KEY, sizeof(int), IPC_CREAT | IPC_EXCL | 0644);
     if (tc_key == -1){
@@ -91,11 +96,10 @@ int main(){
     *turn_counter = 1;
   }
   printf("Fantastic! Now the game has begun!\n");
-  print_intro();
   if (player_number != 1){
-    int fork = fork();
-    if (fork == 0){
-      wpa[*nop] = getpid();
+    int spoon = fork();
+    if (spoon == 0){
+      *wpa[*nop] = getpid();
     }
     while(1){
       printf("Waiting for your turn...\n");
