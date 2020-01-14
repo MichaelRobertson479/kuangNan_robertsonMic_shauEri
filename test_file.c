@@ -12,9 +12,9 @@
 #include <time.h>
 #include <sys/wait.h>
 
-#define NUMBER_OF_PLAYERS_KEY 69422
-#define WAITING_PLAYERS_ARRAY_KEY 422
-#define TURN_COUNTER_KEY 42072
+#define NUMBER_OF_PLAYERS_KEY 69420
+#define WAITING_PLAYERS_ARRAY_KEY 420
+#define TURN_COUNTER_KEY 42069
 
 int main(){
 
@@ -23,9 +23,9 @@ int main(){
   int tc_key;
   int player_number;
   int * nop;
-  int * wpa[420];
+  int wpa[420];
   int * turn_counter;
-  char * buffer;
+  char buffer[7];
 
   nop_key = shmget(NUMBER_OF_PLAYERS_KEY, sizeof(int), IPC_CREAT | IPC_EXCL | 0644);
   if (nop_key == -1){
@@ -48,12 +48,14 @@ int main(){
          printf("error wpa_key %d: %s\n", errno, strerror(errno));
          exit(1);
        }
-       *wpa = shmat(wpa_key, 0, 0);
+       int * wpa = (int *) shmat(wpa_key, 0, 0);
        if (wpa == NULL){
          printf("error wpa_shmat %d: %s\n", errno, strerror(errno));
          exit(1);
        }
-       *wpa[*nop] = getpid();
+       wpa[*nop] = getpid();
+       printf("%d\n", getpid());
+       printf("%d\n", wpa[*nop]);
        while(1){
          printf("Welcome to the card game Tres!\n");
          printf("Waiting for first player to start the game!\n");
@@ -77,29 +79,35 @@ int main(){
     }
     printf("Welcome to the card game Tres!\n");
     printf("Enter \"start\" into the terminal at any time to start the game!\n");
-    fgets(buffer, 256, stdin);
+    fgets(buffer, 7, stdin);
     while (strcmp(buffer, "start\n") != 0){
       printf("Tip: If you wanted to start the game, enter \"start\"!\n");
-      fgets(buffer, 256, stdin);
+      fgets(buffer, 7, stdin);
     }
+    printf("okFGETS\n");
+    int * wpa = (int *) shmat(wpa_key, 0, 0);
     int i;
     for (i = 1; i < *nop; i++){
-      kill(*wpa[i], SIGKILL);
-      *wpa[i] = 0;
+      kill(wpa[i], SIGKILL);
+      wpa[i] = 0;
     }
+    printf("okKILL\n");
     tc_key = shmget(TURN_COUNTER_KEY, sizeof(int), IPC_CREAT | IPC_EXCL | 0644);
     if (tc_key == -1){
       printf("error tc_key %d: %s\n", errno, strerror(errno));
       exit(1);
     }
-    turn_counter = shmat(TURN_COUNTER_KEY, 0, 0);
+    printf("okTURNKEY\n");
+    turn_counter = shmat(tc_key, 0, 0);
+    printf("okMIDDLETURN\n");
     *turn_counter = 1;
+    printf("okTURNCOUNTER\n");
   }
   printf("Fantastic! Now the game has begun!\n");
   if (player_number != 1){
     int spoon = fork();
     if (spoon == 0){
-      *wpa[*nop] = getpid();
+      wpa[*nop] = getpid();
     }
     while(1){
       printf("Waiting for your turn...\n");
