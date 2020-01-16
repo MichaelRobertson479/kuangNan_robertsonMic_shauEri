@@ -99,53 +99,59 @@ int main(){
   printf("Fantastic! Now the game has begun!\n");
 
 /////////////// After Initialization (Game Started) /////////////////////////
+  while(1) {
 
-  if (*tc % *nop == player_number) {
-    
-  }
-
-  else {
-    int spoon = fork();
-    if (spoon == 0){
-      while(1){
-        printf("Waiting for your turn...\n");
-        sleep(100);
+    //display current game state
+    if (*tc % *nop == player_number % *nop) {
+      //message explaining it's your turn
+      //play card etc
+    }
+    else {
+      //message explaining it's not their turn yet
+      int spoon = fork();
+      if (spoon == 0){
+        while(1){
+          printf("Waiting for your turn...\n");
+          sleep(100);
+        }
       }
+      wpa[player_number] = spoon;
+      wait(NULL);
     }
-    wpa[player_number] = spoon;
-    wait(NULL);
-  }
-  nop_end = shmdt(nop);
-  if (nop_end == -1){
-    printf("error nop_end %d: %s\n", errno, strerror(errno));
-    exit(1);
-  }
-  wpa_term = shmdt(wpa);
-  if (wpa_end == -1){
-    printf("error wpa_end %d: %s\n", errno, strerror(errno));
-    exit(1);
-  }
-  tc_end = shmdt(tc);
-  if (tc_end == -1){
-    printf("error tc_end %d: %s\n", errno, strerror(errno));
-    exit(1);
-  }
-  if (player_number == 1){
-    nop_term = shmctl(nop_key, IPC_RMID, 0);
-    if (nop_term == -1){
-      printf("error nop_term %d: %s\n", errno, strerror(errno));
-      exit(1);
-    }
-    wpa_term = shmctl(wpa_key, IPC_RMID, 0);
-    if (wpa_term == -1){
-      printf("error wpa_term %d: %s\n", errno, strerror(errno));
-      exit(1);
-    }
-    tc_term = shmctl(tc_key, IPC_RMID, 0);
-    if (tc_term == -1){
-      printf("error tc_term %d: %s\n", errno, strerror(errno));
-      exit(1);
-    }
+
+    // REMOVAL CODE BELOW
+    // nop_end = shmdt(nop);
+    // if (nop_end == -1){
+    //   printf("error nop_end %d: %s\n", errno, strerror(errno));
+    //   exit(1);
+    // }
+    // wpa_term = shmdt(wpa);
+    // if (wpa_end == -1){
+    //   printf("error wpa_end %d: %s\n", errno, strerror(errno));
+    //   exit(1);
+    // }
+    // tc_end = shmdt(tc);
+    // if (tc_end == -1){
+    //   printf("error tc_end %d: %s\n", errno, strerror(errno));
+    //   exit(1);
+    // }
+    // if (player_number == 1){
+    //   nop_term = shmctl(nop_key, IPC_RMID, 0);
+    //   if (nop_term == -1){
+    //     printf("error nop_term %d: %s\n", errno, strerror(errno));
+    //     exit(1);
+    //   }
+    //   wpa_term = shmctl(wpa_key, IPC_RMID, 0);
+    //   if (wpa_term == -1){
+    //     printf("error wpa_term %d: %s\n", errno, strerror(errno));
+    //     exit(1);
+    //   }
+    //   tc_term = shmctl(tc_key, IPC_RMID, 0);
+    //   if (tc_term == -1){
+    //     printf("error tc_term %d: %s\n", errno, strerror(errno));
+    //     exit(1);
+    //   }
+    // }
   }
   return 0;
 
