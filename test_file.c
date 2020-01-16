@@ -15,11 +15,13 @@
 #define NUMBER_OF_PLAYERS_KEY 222
 #define WAITING_PLAYERS_ARRAY_KEY 2222
 #define TURN_COUNTER_KEY 22222
+#define DIRECTION_KEY 69420
 
 int main(){
 
-  int nop_key, wpa_key, tc_key;
+  int nop_key, wpa_key, tc_key, dir_key;
   int player_number;
+  int * direction;
   int * nop;
   int wpa[10];
   int * tc;
@@ -28,6 +30,8 @@ int main(){
   int nop_term, wpa_term, tc_term;
 
   nop_key = shmget(NUMBER_OF_PLAYERS_KEY, sizeof(int), IPC_CREAT | IPC_EXCL | 0644);
+
+  // not first player
   if (nop_key == -1){
      nop_key = shmget(NUMBER_OF_PLAYERS_KEY, sizeof(int), 0644);
      if (nop_key == -1){
@@ -49,12 +53,18 @@ int main(){
          sleep(100);
        }
      }
+     dir_key = shmget(DRIECTION_KEY, sizeof(int), 0644);
+     if (dir_key == -1){
+       printf("error dir_key %d: %s\n", errno, strerror(errno));
+       exit(1);
+     }
      wpa_key = shmget(WAITING_PLAYERS_ARRAY_KEY, sizeof(wpa), 0644);
      if (wpa_key == -1){
        printf("error wpa_key %d: %s\n", errno, strerror(errno));
        exit(1);
      }
      int * wpa = (int *) shmat(wpa_key, 0, 0);
+     direction = shmat(dir_key,0,0);
      if (wpa == NULL){
        printf("error wpa_shmat %d: %s\n", errno, strerror(errno));
        exit(1);
@@ -62,6 +72,8 @@ int main(){
      wpa[player_number] = spoon;
      wait(NULL);
   }
+
+  //first player
   else{
     nop = shmat(nop_key, 0, 0);
     if (nop == NULL){
