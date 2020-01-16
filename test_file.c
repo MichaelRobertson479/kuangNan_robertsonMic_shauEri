@@ -97,7 +97,14 @@ int main(){
     *tc = 1;
   }
   printf("Fantastic! Now the game has begun!\n");
-  if (player_number != 1){
+
+/////////////// After Initialization (Game Started) /////////////////////////
+
+  if (*tc % *nop == player_number) {
+    
+  }
+
+  else {
     int spoon = fork();
     if (spoon == 0){
       while(1){
