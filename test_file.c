@@ -15,7 +15,7 @@
 #define NUMBER_OF_PLAYERS_KEY 222
 #define WAITING_PLAYERS_ARRAY_KEY 2222
 #define TURN_COUNTER_KEY 22222
-#define DIRECTION_KEY 69420
+#define DIRECTION_KEY 222222
 
 int main(){
 
@@ -28,6 +28,7 @@ int main(){
   char buffer[256];
   int nop_end, wpa_end, tc_end;
   int nop_term, wpa_term, tc_term;
+  int i;
 
   nop_key = shmget(NUMBER_OF_PLAYERS_KEY, sizeof(int), IPC_CREAT | IPC_EXCL | 0644);
 
@@ -53,7 +54,13 @@ int main(){
          sleep(100);
        }
      }
-     dir_key = shmget(DRIECTION_KEY, sizeof(int), 0644);
+     tc_key = shmget(TURN_COUNTER_KEY, sizeof(int), 0644);
+     if (tc_key == -1){
+       printf("error tc_key %d: %s\n", errno, strerror(errno));
+       exit(1);
+     }
+     tc = shmat(tc_key, 0, 0);
+     dir_key = shmget(DIRECTION_KEY, sizeof(int), 0644);
      if (dir_key == -1){
        printf("error dir_key %d: %s\n", errno, strerror(errno));
        exit(1);
@@ -64,7 +71,7 @@ int main(){
        exit(1);
      }
      int * wpa = (int *) shmat(wpa_key, 0, 0);
-     direction = shmat(dir_key,0,0);
+     direction = shmat(dir_key, 0, 0);
      if (wpa == NULL){
        printf("error wpa_shmat %d: %s\n", errno, strerror(errno));
        exit(1);
@@ -82,11 +89,25 @@ int main(){
     }
     *nop = 1;
     player_number = 1;
+    dir_key = shmget(DIRECTION_KEY, sizeof(int), IPC_CREAT | 0644);
+    if (dir_key == -1){
+      printf("error dir_key %d: %s\n", errno, strerror(errno));
+      exit(1);
+    }
     wpa_key = shmget(WAITING_PLAYERS_ARRAY_KEY, sizeof(wpa), IPC_CREAT | IPC_EXCL | 0644);
     if (wpa_key == -1){
       printf("error wpa_key %d: %s\n", errno, strerror(errno));
       exit(1);
     }
+
+    tc_key = shmget(TURN_COUNTER_KEY, sizeof(int), IPC_CREAT | 0644);
+    if (tc_key == -1){
+      printf("error tc_key %d: %s\n", errno, strerror(errno));
+      exit(1);
+    }
+    tc = shmat(tc_key, 0, 0);
+    *tc = 1;
+
     printf("Welcome to the card game Tres!\n");
     printf("Enter \"start\" into the terminal at any time to start the game!\n");
     fgets(buffer, 256, stdin);
@@ -95,18 +116,12 @@ int main(){
       fgets(buffer, 256, stdin);
     }
     int * wpa = (int *) shmat(wpa_key, 0, 0);
-    int i;
+    direction = shmat(dir_key, 0, 0);
+    *direction = 1;
     for (i = 2; i <= *nop; i++){
       kill(wpa[i], SIGKILL);
       wpa[i] = 0;
     }
-    tc_key = shmget(TURN_COUNTER_KEY, sizeof(int), IPC_CREAT | IPC_EXCL | 0644);
-    if (tc_key == -1){
-      printf("error tc_key %d: %s\n", errno, strerror(errno));
-      exit(1);
-    }
-    tc = shmat(tc_key, 0, 0);
-    *tc = 1;
   }
   printf("Fantastic! Now the game has begun!\n");
 
@@ -114,20 +129,36 @@ int main(){
   while(1) {
 
     //display current game state
-    if (*tc % *nop == player_number % *nop) {
-      //message explaining it's your turn
-      //play card etc
+
+    if ((*tc % *nop) == (player_number % *nop)) {
+      printf("It's your turn\n");
+
+      //stand-in for playing cards
+      sleep(3);
+
+      //change turn
+      *tc += *direction;
+
+      //kill children except own
+      for (i = 1; i <= *nop; i++) {
+        if (i != player_number) {
+          kill(wpa[i], SIGKILL);
+          wpa[i] = 0;
+        }
+      }
     }
+
     else {
-      //message explaining it's not their turn yet
+      printf("It's not your turn yet\n");
       int spoon = fork();
+      wpa[player_number] = spoon;
       if (spoon == 0){
         while(1){
           printf("Waiting for your turn...\n");
           sleep(100);
         }
       }
-      wpa[player_number] = spoon;
+
       wait(NULL);
     }
 
