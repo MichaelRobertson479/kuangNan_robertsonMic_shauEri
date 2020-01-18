@@ -140,26 +140,33 @@ int main(){
       *tc += *direction;
 
       //kill children except own
-      for (i = 1; i <= *nop; i++) {
-        if (i != player_number) {
-          kill(wpa[i], SIGKILL);
-          wpa[i] = 0;
-        }
-      }
+      // for (i = 1; i <= *nop; i++) {
+      //   if (i != player_number) {
+      //     kill(wpa[i], SIGKILL);
+      //     wpa[i] = 0;
+      //   }
+      // }
     }
 
     else {
       printf("It's not your turn yet\n");
-      int spoon = fork();
-      wpa[player_number] = spoon;
-      if (spoon == 0){
-        while(1){
-          printf("Waiting for your turn...\n");
-          sleep(100);
-        }
+
+      //just wait till your turn
+      while ((*tc % *nop) != (player_number % *nop)) {
+        sleep(1);
       }
 
-      wait(NULL);
+
+      // int spoon = fork();
+      // wpa[player_number] = spoon;
+      // if (spoon == 0){
+      //   while(1){
+      //     printf("Waiting for your turn...\n");
+      //     sleep(100);
+      //   }
+      // }
+
+      // wait(NULL);
     }
 
     // REMOVAL CODE BELOW
