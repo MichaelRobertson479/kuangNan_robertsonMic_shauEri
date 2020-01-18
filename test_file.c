@@ -124,6 +124,7 @@ int main(){
     }
   }
   printf("Fantastic! Now the game has begun!\n");
+  printf("Your are player %d\n", player_number);
 
 /////////////// After Initialization (Game Started) /////////////////////////
   while(1) {
