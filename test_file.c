@@ -151,8 +151,21 @@ int main(){
     else {
       printf("It's not your turn yet\n");
 
+      //save current turn locally
+      int turn_local = *tc;
+
+      //say whose turn it is now
+      printf("It is player %d's turn\n", *tc % *nop);
+
       //just wait till your turn
       while ((*tc % *nop) != (player_number % *nop)) {
+
+        //if turn changed
+        if(*tc > turn_local) {
+            break;
+        }
+
+        //otherwise just wait
         sleep(1);
       }
 
