@@ -179,6 +179,7 @@ int main(){
           wpa[i] = 0;
         }
       }
+      printf("gets here\n");
     }
 
     else {
