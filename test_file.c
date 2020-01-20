@@ -172,12 +172,12 @@ int main(){
       *tc += *direction;
 
       //kill children except own
-      // for (i = 1; i <= *nop; i++) {
-      //   if (i != player_number) {
-      //     kill(wpa[i], SIGKILL);
-      //     wpa[i] = 0;
-      //   }
-      // }
+      for (i = 1; i <= *nop; i++) {
+        if (i != player_number) {
+          kill(wpa[i], SIGKILL);
+          wpa[i] = 0;
+        }
+      }
     }
 
     else {
@@ -189,29 +189,29 @@ int main(){
       //say whose turn it is now
       printf("It is player %d's turn\n", *tc % *nop);
 
-      //just wait till your turn
-      while ((*tc % *nop) != (player_number % *nop)) {
+      // //just wait till your turn
+      // while ((*tc % *nop) != (player_number % *nop)) {
 
-        //if turn changed, exit loop
-        if(*tc > turn_local) {
-            break;
-        }
-
-        //otherwise just wait
-        sleep(1);
-      }
-
-
-      // int spoon = fork();
-      // wpa[player_number] = spoon;
-      // if (spoon == 0){
-      //   while(1){
-      //     printf("Waiting for your turn...\n");
-      //     sleep(100);
+      //   //if turn changed, exit loop
+      //   if(*tc > turn_local) {
+      //       break;
       //   }
+
+      //   //otherwise just wait
+      //   sleep(1);
       // }
 
-      // wait(NULL);
+
+      int spoon = fork();
+      memcpy(wpa[player_number], spoon);
+      if (spoon == 0){
+        while(1){
+          printf("Waiting for your turn...\n");
+          sleep(100);
+        }
+      }
+
+      wait(NULL);
     }
 
     // REMOVAL CODE BELOW
