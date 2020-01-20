@@ -203,7 +203,7 @@ int main(){
 
 
       int spoon = fork();
-      memcpy(wpa[player_number], &spoon);
+      memcpy(&wpa[player_number], &spoon);
       if (spoon == 0){
         while(1){
           printf("Waiting for your turn...\n");
