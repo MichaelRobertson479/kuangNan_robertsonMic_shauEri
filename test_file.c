@@ -146,7 +146,7 @@ int main(){
     //tell other players that game has started
     for (i = 2; i <= *nop; i++){
       kill(wpa[i], SIGKILL);
-      wpa[i] = 0;
+      memcpy(&wpa[i], &0, sizeof(int));
     }
   }
 
@@ -175,7 +175,7 @@ int main(){
       for (i = 1; i <= *nop; i++) {
         if (i != player_number) {
           kill(wpa[i], SIGKILL);
-          wpa[i] = 0;
+          memcpy(&wpa[i], &0, sizeof(int));
         }
       }
     }
