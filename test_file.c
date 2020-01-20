@@ -118,7 +118,7 @@ int main(){
     *direction = 1;
 
     //create waiting players array
-    wpa_key = shmget(WAITING_PLAYERS_ARRAY_KEY, sizeof(wpa), IPC_CREAT | IPC_EXCL | 0644);
+    wpa_key = shmget(WAITING_PLAYERS_ARRAY_KEY, sizeof(wpa), IPC_CREAT | IPC_EXCL | 0666);
     if (wpa_key == -1){
       printf("error wpa_key %d: %s\n", errno, strerror(errno));
       exit(1);
