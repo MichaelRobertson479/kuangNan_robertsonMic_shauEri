@@ -78,7 +78,7 @@ int main(){
      direction = shmat(dir_key, 0, 0);
 
      //get waiting players array
-     wpa_key = shmget(WAITING_PLAYERS_ARRAY_KEY, sizeof(wpa), 0644);
+     wpa_key = shmget(WAITING_PLAYERS_ARRAY_KEY, sizeof(wpa), 0666);
      if (wpa_key == -1){
        printf("error wpa_key %d: %s\n", errno, strerror(errno));
        exit(1);
