@@ -88,7 +88,7 @@ int main(){
        printf("error wpa_shmat %d: %s\n", errno, strerror(errno));
        exit(1);
      }
-     wpa[player_number] = spoon;
+     memcpy(&wpa[player_number], &spoon, sizeof(int));
 
      //wait for child to die (for game to start)
      wait(NULL);
@@ -146,7 +146,7 @@ int main(){
     //tell other players that game has started
     for (i = 2; i <= *nop; i++){
       kill(wpa[i], SIGKILL);
-      memcpy(&wpa[i], &0, sizeof(int));
+      wpa[i] = 0;
     }
   }
 
@@ -175,7 +175,7 @@ int main(){
       for (i = 1; i <= *nop; i++) {
         if (i != player_number) {
           kill(wpa[i], SIGKILL);
-          memcpy(&wpa[i], &0, sizeof(int));
+          wpa[i] = 0;
         }
       }
     }
