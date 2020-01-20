@@ -90,8 +90,8 @@ int main(){
        }
      }
      memcpy(&wpa[player_number], &spoon, sizeof(spoon));
-     printf("wpa[%d], child process id: %d\n", player_number, spoon);
-     printf("wpa[%d], child process id: %d\n", player_number, wpa[player_number]);
+     //printf("wpa[%d], child process id: %d\n", player_number, spoon);
+     //printf("wpa[%d], child process id: %d\n", player_number, wpa[player_number]);
 
      wpa_term = shmdt(wpa);
      if (wpa_end == -1){
@@ -151,7 +151,7 @@ int main(){
     }
 
     for (i = 2; i <= *nop; i++){
-      printf("wpa[%d] = %d\n", i, wpa[i]);
+      //printf("wpa[%d] = %d\n", i, wpa[i]);
       kill(wpa[i], SIGKILL);
       //wpa[i] = 0;
     }
@@ -164,7 +164,9 @@ int main(){
 
   }
 
-  printf("Fantastic! Now the game has begun!\n");/////////////// After Initialization (Game Started) /////////////////////////
+  printf("Fantastic! Now the game has begun!\n");
+  
+  /////////////// After Initialization (Game Started) /////////////////////////
   while(1) {
 
     wpa_key = shmget(WAITING_PLAYERS_ARRAY_KEY, sizeof(wpa), 0644);
@@ -222,7 +224,7 @@ int main(){
       //   printf("wpa[%d] = %d\n", i, wpa[i]);
       // }
       wait(NULL);
-      printf("Why?\n");
+      //printf("Why?\n");
     }
 
     wpa_term = shmdt(wpa);
