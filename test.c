@@ -89,7 +89,10 @@ int main(){
          sleep(100);
        }
      }
-     memcpy(&wpa[player_number], &spoon, sizeof(spoon));
+
+     wpa[player_number] = spoon;
+     //memcpy(&wpa[player_number], &spoon, sizeof(spoon));
+
      //printf("wpa[%d], child process id: %d\n", player_number, spoon);
      //printf("wpa[%d], child process id: %d\n", player_number, wpa[player_number]);
 
@@ -217,7 +220,10 @@ int main(){
           sleep(100);
         }
       }
-      memcpy(&wpa[player_number], &spoon, sizeof(spoon));
+
+      wpa[player_number] = spoon;
+      //memcpy(&wpa[player_number], &spoon, sizeof(spoon));
+
       //printf("wpa[%d], child process id: %d\n", player_number, wpa[player_number]);
       //printf("Post:\n");
       // for (i = 1; i <= *nop; i++) {
