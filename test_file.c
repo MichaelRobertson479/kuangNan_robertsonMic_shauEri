@@ -174,7 +174,7 @@ int main(){
       //kill children except own
       for (i = 1; i <= *nop; i++) {
         if (i != player_number) {
-          printf("i: %d\n", i);
+          printf("i: %dm wpa[i] : %d", i, wpa[i]);
           kill(wpa[i], SIGKILL);
           wpa[i] = 0;
           printf("gets here\n");
