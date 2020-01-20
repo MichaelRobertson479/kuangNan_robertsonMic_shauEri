@@ -145,6 +145,7 @@ int main(){
 
     //tell other players that game has started
     for (i = 2; i <= *nop; i++){
+      printf("i: %dm wpa[i] : %d", i, wpa[i]);
       kill(wpa[i], SIGKILL);
       wpa[i] = 0;
     }
