@@ -177,9 +177,11 @@ int main(){
           printf("i: %d\n", i);
           kill(wpa[i], SIGKILL);
           wpa[i] = 0;
+          printf("gets here\n");
         }
+        
       }
-      printf("gets here\n");
+      
     }
 
     else {
