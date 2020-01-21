@@ -1,0 +1,110 @@
+robertsonMic -- 2020-01-03 11:49
+Made beta version of hand structure, drawing, and deck
+
+robertsonMic -- 2020-01-05 00:39
+Made beta version of playing cards, “top card,” and pseudo array-list functionality
+
+shauEri -- 2020-01-06 16:56
+Implemented structures to represent cards and hands
+
+kuangNan-- 2020-01-06 01:25
+Created framework for drawing and playing
+
+robertsonMic -- 2020-01-07 11:55
+Distinguish between first player and other players
+
+robertsonMic -- 2020-01-07 20:57
+Attempted turns with while loop and shared memory
+
+kuangNan-- 2020-01-10 02:29
+Fixed memory leaks involving hand struct
+
+shauEri -- 2020-01-13 11:21
+Started framework for entering/playing the game
+
+shauEri -- 2020-01-13 17:34
+Began compiling, testing, and correcting framework
+
+shauEri -- 2020-01-14 11:16
+Fixed input for the first player to start the game
+
+kuangNan-- 2020-01-06 03:14
+Fixed bug involving playing two equivalent cards
+
+kuangNan-- 2020-01-06 11:14
+Started implementing the “plus” cards
+
+shauEri -- 2020-01-15 11:21
+Fixed bug involving the waiting player array
+
+kuangNan-- 2020-01-16 03:24
+Finished implementing drawing cards
+
+robertsonMic -- 2020-01-16 11:46
+Added shared memory needed for skips and reverses
+
+kuangNan-- 2020-01-17 11:44
+Added comments on drawing and playing code
+
+robertsonMic -- 2020-01-18 03:59
+Got turns to work through while loop approach
+
+robertsonMic -- 2020-01-18 17:48
+Added comments to networking code
+
+kuangNan -- 2020-01-19 21:29
+Implemented shared memory for the top of the discard pile (“Top Card”)
+
+shauEri -- 2020-01-19 22:23
+Got turns to work through forking and signal approach
+
+kuangNan -- 2020-01-20 03:56
+Successfully merged networking and playing code
+
+robertsonMic -- 2020-01-20 05:32
+Changed turns from while loop approach to forking and signal approach
+
+robertsonMic -- 2020-01-20 12:44
+Implemented skips and reverses
+
+robertsonMic -- 2020-01-20 14:29
+Implemented win condition and ending the game
+
+robertsonMic -- 2020-01-20 15:06
+Got reverses and skips to work if in “stacked input”
+
+robertsonMic -- 2020-01-20 15:21
+Fixed issue of negative turns caused by reverses
+
+shauEri -- 2020-01-20 18:12
+Added shared memory detachment and removal code in main.c
+
+robertsonMic -- 2020-01-20 19:06
+Implemented quitting and ending the game
+
+kuangNan -- 2020-01-20 19:38
+Fixed stacking-draw bug and freed the hand
+
+shauEri -- 2020-01-20 20:23
+Wrote clear function with execvp  so screen doesn’t become cluttered
+
+robertsonMic -- 2020-01-20 20:43
+Printed current state of game and draw-count for everyone
+
+kuangNan -- 2020-01-20 21:27
+Made skips and reverses not stackable together
+
+kuangNan -- 2020-01-20 22:00
+Changed permissions of shared memories to prepare for multi-account SSH into same machine
+
+shauEri -- 2020-01-20 22:18
+Added debug code, realized child-killing of other processes on other accounts was the pinnacle of data vulnerability, and so it was just not possible. But no use crying over spilled milk.
+
+shauEri -- 2020-01-21 00:12
+Made output look pretty, resolved bugs related to output display
+
+kuangNan -- 2020-01-21 02:31
+Finished moving files from nkuang00/final to MichaelRobertson479/kuangNan_robertsonMic_shauEri
+
+shauEri -- 2020-01-21 03:00
+Bravo Six, Going Dark
