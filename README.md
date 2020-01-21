@@ -27,7 +27,7 @@ Each card has a color and a type.
 - 2
 - 3
 - 4
-- + (+2)
+- \+ (+2)
 - R (reverse)
 - S (skip)
 
