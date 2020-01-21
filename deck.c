@@ -1,92 +1,144 @@
-// headers
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/ipc.h>
-#include <sys/sem.h>
-#include <sys/shm.h>
-#include <sys/types.h>
-#include <errno.h>
-#include <string.h>
-#include <fcntl.h>
-#include <time.h>
+#include "deck.h"
 
-// headers
-// card
-struct cards {
-  char color[10];
-  char type[10];
-};
-// represent card
-void print_card(struct cards * card){
-  printf("%s %s, ", card->color, card->type);
+void add_card(struct card * c, struct hand * h){
+  *(h->cards + h->size) = c;
+  h->size += 1;
 }
-// hand
-struct hands {
-    struct cards * card_hand[109];
-    int size;
-};
-// hand
-// represent card
-struct hands * hand;
-void print_hand(struct hands * hand){
+
+int add_str(char * str, struct hand * h){
+  while (str != NULL){
+    char * substr = strsep (&str, " ");
+    if (strlen(substr) != 2){
+      return 0;
+    }
+    if (strchr("RGBY",*(substr))==NULL || strchr("0123+RS",*(substr + 1))==NULL){
+      return 0;
+    }
+
+    add_card(str_to_card(substr), h);
+  }
+
+  return 1;
+}
+
+struct card * str_to_card(char * str){
+  struct card * c = malloc(sizeof(struct card));
+  c->color = str[0];
+  c->type = str[1];
+  return c;
+}
+
+struct card * free_card(struct card * c){
+  free(c);
+  return NULL;
+}
+struct hand * free_hand(struct hand * h){
   int i;
-  for (i = 0; i < hand->size; i++){
-    print_card(*(hand->card_hand + i));
+  for (i = 0; i < h->size; i++){
+    h->cards[i] = free_card(h->cards[i]);
   }
-  printf("\n");
+
+  free(h);
+  return NULL;
 }
-struct hands * deck;
-// fill deck
-void add_card(struct hands * deck, struct cards * card){
-  *(deck->card_hand + deck->size) = card;
-  deck->size = deck->size + 1;
-}
-// make deck
-void make_deck(struct hands * deck){
-  deck->size = 0;
-  char * colors[4] = {"Red", "Green", "Blue", "Yellow"};
-  char * types[13] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+2", "Reverse", "Skip"};
-  int i;
-  int j;
-  int k;
-  int l;
-  for (i = 0; i < 4; i++){
-    for (j = 0; j < 13; j++){
-      if (strcmp(types[j], "0") == 0){
-        l = 1;
-      }
-      else{
-        l = 2;
-      }
-      for (k = 0; k < l; k++){
-        struct cards * card = malloc(sizeof(struct cards));
-        strcpy(card->color, colors[i]);
-        strcpy(card->type, types[j]);
-        add_card(deck, card);
-      }
+
+int count_cards(struct card * c, struct hand * h){
+  int count, i;
+  count = 0;
+  for (i = 0; i < h->size; i++){
+    if (card_cmp(c, h->cards[i]) == 0){
+      count++;
     }
   }
-  char * special_types[2] = {"Card", "+4"};
-  for (i = 0; i < 2; i++){
-    for (j = 0; j < 4; j++){
-      struct cards * card = malloc(sizeof(struct cards));
-      strcpy(card->color, "Wild");
-      strcpy(card->type, special_types[i]);
-      add_card(deck, card);
-    }
-  }
+  return count;
 }
-int main(int argc, char *argv[]) {
-    deck = malloc(sizeof(struct cards) * 180 + sizeof(int));
-    make_deck(deck);
-    print_hand(deck);
-    printf("%d\n", deck->size);
-    int i;
-    for (i = 0; i < 108; i++){
-      free(deck->card_hand[i]);
-    }
-    free(deck);
+
+
+//returns 0 if identical, -1 otherwise
+//modify if we are implementing card sorting
+int card_cmp(struct card * c0, struct card * c1){
+  if (c0->color == c1->color && c0->type == c1->type){
     return 0;
+  }
+  return -1;
+}
+
+struct card * remove_hand(struct hand * h0, struct hand * h1){
+  int i, max;
+  struct card * c;
+  max = h0->size;
+  for (i = 0; i < max; i++){
+    c = remove_card(h0->cards[i], h1);
+
+  }
+  return c;
+}
+
+struct card * remove_handh(struct hand * h0, struct hand * h1){
+  int i, max;
+  struct card * c;
+  max = h0->size;
+  for (i = 0; i < max; i++){
+    c = remove_cardh(h0->cards[i], h1);
+
+  }
+  return c;
+}
+
+struct card * remove_card(struct card * c, struct hand * h){
+  int i, max;
+  max = h->size;
+  for (i = max - 1; i > -1; i--){
+    if (card_cmp(c, h->cards[i]) == 0){
+      break;
+    }
+  }
+  if (i == -1){
+    printf("Card not removed.\n");
+    return NULL;
+  }
+  //h->cards[i] = free_card(h->cards[i]);
+  h->cards[i] = h->cards[max - 1];
+  h->cards[max - 1] = NULL;
+  h->size--;
+  return c;
+}
+
+struct card * remove_cardh(struct card * c, struct hand * h){
+  int i, max;
+  max = h->size;
+  for (i = max - 1; i > -1; i--){
+    if (card_cmp(c, h->cards[i]) == 0){
+      break;
+    }
+  }
+  if (i == -1){
+    printf("Card not removed.\n");
+    return NULL;
+  }
+  h->cards[i] = free_card(h->cards[i]);
+  h->cards[i] = h->cards[max - 1];
+  h->cards[max - 1] = NULL;
+  h->size--;
+  return c;
+}
+
+int is_plus(struct card * c){
+  if (c->type == '+'){
+    return 1;
+  }
+  return 0;
+}
+
+int is_skip(struct card * c){
+  if (c->type == 'S'){
+    return 1;
+  }
+  return 0;
+}
+int is_rev(struct card * c){
+  if (c->type == 'R'){
+    return 1;
+  }
+  return 0;
 }
