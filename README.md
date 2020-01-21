@@ -32,7 +32,7 @@ Each card has a color and a type.
 - S (skip)
 
 The cards are displayed with the color, followed by the type.
-* **Ex**: R3, B8, G+, YR
+* **Ex**: R3, B0, G+, YR
 
 Each player is only allowed to play during their turn. During a player’s turn, the player must enter a valid sequence of cards, “draw”, or “quit”. If the player enters something illegal, then the program gets mad and tells the player to enter something valid.
 
